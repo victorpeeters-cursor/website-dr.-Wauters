@@ -2,15 +2,21 @@
 
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { localize } from '@/sanity/lib/localize';
+import { SiteSettings } from '@/sanity/lib/queries';
 
 interface StickyBannerProps {
   enabled?: boolean;
+  settings: SiteSettings | null;
 }
 
-export default function StickyBanner({ enabled = false }: StickyBannerProps) {
-  const { t } = useLanguage();
+export default function StickyBanner({ enabled = false, settings }: StickyBannerProps) {
+  const { t, language } = useLanguage();
   const [dismissed, setDismissed] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  const s = settings || {};
+  const message = localize(s, 'bannerMessage', language, t.banner.message);
 
   useEffect(() => {
     setMounted(true);
@@ -30,7 +36,7 @@ export default function StickyBanner({ enabled = false }: StickyBannerProps) {
   return (
     <div className="bg-[#0B1D2E] text-white text-center py-2.5 px-6 relative z-[60]">
       <p className="text-[13px] tracking-wide">
-        {t.banner.message}
+        {message}
       </p>
       <button
         onClick={handleDismiss}

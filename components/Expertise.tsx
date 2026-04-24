@@ -2,20 +2,34 @@
 
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { localize } from '@/sanity/lib/localize';
+import { ExpertiseItem, PageContent } from '@/sanity/lib/queries';
 
-export default function Expertise() {
-  const { t } = useLanguage();
+/* ── Icon Map ─────────────────────────────────────────── */
+const iconMap: Record<string, React.ReactNode> = {
+  asthma: <WindIcon />,
+  copd: <LungsIcon />,
+  infections: <ShieldIcon />,
+  tumors: <ScanIcon />,
+  lungFunction: <ActivityIcon />,
+  preOperative: <ClipboardIcon />,
+  sleepDisorders: <MoonIcon />,
+};
+
+export default function Expertise({ items, content }: { items: ExpertiseItem[]; content: PageContent | null }) {
+  const { t, language } = useLanguage();
   const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.05 });
 
-  const items = [
-    { key: 'asthma' as const, icon: <WindIcon /> },
-    { key: 'copd' as const, icon: <LungsIcon /> },
-    { key: 'infections' as const, icon: <ShieldIcon /> },
-    { key: 'tumors' as const, icon: <ScanIcon /> },
-    { key: 'lungFunction' as const, icon: <ActivityIcon /> },
-    { key: 'preOperative' as const, icon: <ClipboardIcon /> },
-    { key: 'sleepDisorders' as const, icon: <MoonIcon /> },
-  ];
+  const c = content || {};
+  const label = localize(c, 'expertiseLabel', language, t.expertise.label);
+  const title = localize(c, 'expertiseTitle', language, t.expertise.title);
+  const description = localize(c, 'expertiseDescription', language, t.expertise.description);
+
+  const expertises = (items || []).map(item => ({
+    icon: iconMap[item.iconKey] || <LungsIcon />,
+    title: (item[`title_${language}` as keyof ExpertiseItem] as string) || item.title_nl,
+    description: (item[`description_${language}` as keyof ExpertiseItem] as string) || item.description_nl,
+  }));
 
   return (
     <section id="expertise" ref={sectionRef} className="py-24 lg:py-32 bg-[#F7F5F2]">
@@ -27,7 +41,7 @@ export default function Expertise() {
           }`}
         >
           <span className="inline-block text-[12px] tracking-[0.25em] uppercase font-medium text-[#0B1D2E]/40 mb-4">
-            {t.expertise.label}
+            {label}
           </span>
         </div>
 
@@ -46,19 +60,19 @@ export default function Expertise() {
                   <path d="M12 6v6l4 2"/>
                 </svg>
               </div>
-              <h3 className="font-serif text-[clamp(1.8rem,3vw,2.5rem)] leading-[1.15] font-semibold text-white mb-4">
-                {t.expertise.title}
+              <h3 className="font-serif text-[clamp(1.8rem,3vw,2.5rem)] leading-[1.15] font-semibold text-white mb-4 whitespace-pre-line">
+                {title}
               </h3>
               <p className="text-[14px] leading-relaxed text-white/60 max-w-md">
-                {t.expertise.description}
+                {description}
               </p>
             </div>
           </div>
 
           {/* Expertise cards */}
-          {items.map((item, index) => (
+          {expertises.map((item, index) => (
             <div
-              key={item.key}
+              key={index}
               className={`group bg-white rounded-2xl p-6 lg:p-7 flex flex-col justify-between min-h-[180px] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
@@ -69,10 +83,10 @@ export default function Expertise() {
               </div>
               <div>
                 <h4 className="font-semibold text-[15px] text-[#0B1D2E] mb-1.5">
-                  {t.expertise.items[item.key].title}
+                  {item.title}
                 </h4>
                 <p className="text-[13px] leading-relaxed text-[#6B7280]">
-                  {t.expertise.items[item.key].description}
+                  {item.description}
                 </p>
               </div>
             </div>

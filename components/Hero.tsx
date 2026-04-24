@@ -2,11 +2,25 @@
 
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { localize } from '@/sanity/lib/localize';
+import { PageContent } from '@/sanity/lib/queries';
 import Image from 'next/image';
 
-export default function Hero() {
-  const { t } = useLanguage();
+export default function Hero({ content }: { content: PageContent | null }) {
+  const { t, language } = useLanguage();
   const { ref: heroRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
+
+  const c = content || {};
+  const subtitle = localize(c, 'heroSubtitle', language, t.hero.subtitle);
+  const title = localize(c, 'heroTitle', language, t.hero.title);
+  const titleAccent = localize(c, 'heroTitleAccent', language, t.hero.titleAccent);
+  const description = localize(c, 'heroDescription', language, t.hero.description);
+  const cta = localize(c, 'heroCta', language, t.hero.cta);
+  const ctaSecondary = localize(c, 'heroCtaSecondary', language, t.hero.ctaSecondary);
+  const statYears = c.heroStatYears || t.hero.statYears;
+  const statYearsLabel = localize(c, 'heroStatYearsLabel', language, t.hero.statYearsLabel);
+  const statSpecialists = c.heroStatSpecialists || t.hero.statSpecialists;
+  const statSpecialistsLabel = localize(c, 'heroStatSpecialistsLabel', language, t.hero.statSpecialistsLabel);
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
@@ -43,7 +57,7 @@ export default function Hero() {
             }`}
           >
             <span className="inline-block text-[12px] tracking-[0.25em] uppercase font-medium text-[#0B1D2E]/50 mb-6">
-              {t.hero.subtitle}
+              {subtitle}
             </span>
           </div>
 
@@ -53,9 +67,9 @@ export default function Hero() {
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}
           >
-            {t.hero.title}
+            {title}
             <br />
-            <span className="italic whitespace-pre-line">{t.hero.titleAccent}</span>
+            <span className="italic whitespace-pre-line">{titleAccent}</span>
           </h1>
 
           {/* Description */}
@@ -64,7 +78,7 @@ export default function Hero() {
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}
           >
-            {t.hero.description}
+            {description}
           </p>
 
           {/* CTAs */}
@@ -78,7 +92,7 @@ export default function Hero() {
               onClick={(e) => e.preventDefault()}
               className="inline-flex items-center gap-2 bg-[#0B1D2E] text-white text-[14px] font-medium tracking-wide px-8 py-3.5 rounded-full hover:bg-[#1A3A5C] transition-colors duration-200"
             >
-              {t.hero.cta}
+              {cta}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
@@ -87,7 +101,7 @@ export default function Hero() {
               onClick={() => scrollTo('expertise')}
               className="inline-flex items-center gap-2 text-[14px] font-medium tracking-wide text-[#0B1D2E] px-6 py-3.5 rounded-full border border-[#E5E7EB] hover:border-[#0B1D2E]/30 transition-colors duration-200"
             >
-              {t.hero.ctaSecondary}
+              {ctaSecondary}
             </button>
           </div>
 
@@ -99,19 +113,19 @@ export default function Hero() {
           >
             <div className="flex items-baseline gap-3">
               <span className="text-4xl lg:text-5xl font-serif font-semibold text-[#0B1D2E]">
-                {t.hero.statYears}
+                {statYears}
               </span>
               <span className="text-[12px] text-[#6B7280] tracking-wide uppercase leading-tight max-w-[80px]">
-                {t.hero.statYearsLabel}
+                {statYearsLabel}
               </span>
             </div>
             <div className="h-10 w-px bg-[#E5E7EB]" />
             <div className="flex items-baseline gap-3">
               <span className="text-4xl lg:text-5xl font-serif font-semibold text-[#0B1D2E]">
-                {t.hero.statSpecialists}
+                {statSpecialists}
               </span>
               <span className="text-[12px] text-[#6B7280] tracking-wide uppercase leading-tight max-w-[80px]">
-                {t.hero.statSpecialistsLabel}
+                {statSpecialistsLabel}
               </span>
             </div>
           </div>

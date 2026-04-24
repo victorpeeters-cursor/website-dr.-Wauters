@@ -2,17 +2,30 @@
 
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { localize } from '@/sanity/lib/localize';
+import { PracticalInfoItem, PageContent } from '@/sanity/lib/queries';
 
-export default function PracticalInfo() {
-  const { t } = useLanguage();
+/* ── Icon Map ─────────────────────────────────────────── */
+const iconMap: Record<string, React.ReactNode> = {
+  results: <ResultsIcon />,
+  prescriptions: <PrescriptionsIcon />,
+  rates: <RatesIcon />,
+  payment: <PaymentIcon />,
+};
+
+export default function PracticalInfo({ items, content }: { items: PracticalInfoItem[]; content: PageContent | null }) {
+  const { t, language } = useLanguage();
   const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.05 });
 
-  const items = [
-    { key: 'results' as const, icon: <ResultsIcon /> },
-    { key: 'prescriptions' as const, icon: <PrescriptionsIcon /> },
-    { key: 'rates' as const, icon: <RatesIcon /> },
-    { key: 'payment' as const, icon: <PaymentIcon /> },
-  ];
+  const c = content || {};
+  const label = localize(c, 'practicalInfoLabel', language, t.practicalInfo.label);
+  const title = localize(c, 'practicalInfoTitle', language, t.practicalInfo.title);
+
+  const cards = (items || []).map(item => ({
+    icon: iconMap[item.iconKey] || <ResultsIcon />,
+    title: (item[`title_${language}` as keyof PracticalInfoItem] as string) || item.title_nl,
+    description: (item[`description_${language}` as keyof PracticalInfoItem] as string) || item.description_nl,
+  }));
 
   return (
     <section id="practical-info" ref={sectionRef} className="py-24 lg:py-32 bg-[#F7F5F2]">
@@ -24,18 +37,18 @@ export default function PracticalInfo() {
           }`}
         >
           <span className="inline-block text-[12px] tracking-[0.25em] uppercase font-medium text-[#0B1D2E]/40 mb-4">
-            {t.practicalInfo.label}
+            {label}
           </span>
           <h2 className="font-serif text-[clamp(2rem,4vw,3rem)] font-semibold text-[#0B1D2E] whitespace-pre-line">
-            {t.practicalInfo.title}
+            {title}
           </h2>
         </div>
 
         {/* 2×2 Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
-          {items.map((item, index) => (
+          {cards.map((item, index) => (
             <div
-              key={item.key}
+              key={index}
               className={`group bg-white rounded-2xl p-8 lg:p-10 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
@@ -48,10 +61,10 @@ export default function PracticalInfo() {
                 <span className="text-[#0B1D2E]">{item.icon}</span>
               </div>
               <h3 className="font-serif text-xl font-semibold text-[#0B1D2E] mb-3">
-                {t.practicalInfo.items[item.key].title}
+                {item.title}
               </h3>
               <p className="text-[14px] leading-relaxed text-[#6B7280]">
-                {t.practicalInfo.items[item.key].description}
+                {item.description}
               </p>
             </div>
           ))}

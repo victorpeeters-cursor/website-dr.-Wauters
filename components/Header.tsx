@@ -2,12 +2,22 @@
 
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { localize } from '@/sanity/lib/localize';
+import { SiteSettings } from '@/sanity/lib/queries';
 import type { Language } from '@/lib/i18n/translations';
 
-export default function Header() {
+export default function Header({ settings }: { settings: SiteSettings | null }) {
   const { language, setLanguage, t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const s = settings || {};
+  const navSpecialists = localize(s, 'navSpecialists', language, t.nav.specialists);
+  const navExpertise = localize(s, 'navExpertise', language, t.nav.expertise);
+  const navFaq = localize(s, 'navFaq', language, t.nav.faq);
+  const navContact = localize(s, 'navContact', language, t.nav.contact);
+  const navAppointment = localize(s, 'navAppointment', language, t.nav.appointment);
+  const logoSubtitle = localize(s, 'logoSubtitle', language, t.nav.logoSubtitle);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -36,6 +46,14 @@ export default function Header() {
 
   const languages: Language[] = ['nl', 'fr', 'en'];
 
+  const navItems = [
+    { label: navSpecialists, id: 'specialists' },
+    { label: navExpertise, id: 'expertise' },
+    { label: navFaq, id: 'faq' },
+    { label: 'Info', id: 'practical-info' },
+    { label: navContact, id: 'contact' },
+  ];
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -55,19 +73,13 @@ export default function Header() {
               Wauters & Vandoorne
             </span>
             <span className="text-[10px] tracking-[0.15em] uppercase text-[#6B7280] w-full text-left">
-              {t.nav.logoSubtitle}
+              {logoSubtitle}
             </span>
           </button>
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-8">
-            {[
-              { label: t.nav.specialists, id: 'specialists' },
-              { label: t.nav.expertise, id: 'expertise' },
-              { label: t.nav.faq, id: 'faq' },
-              { label: 'Info', id: 'practical-info' },
-              { label: t.nav.contact, id: 'contact' },
-            ].map(({ label, id }) => (
+            {navItems.map(({ label, id }) => (
               <button
                 key={id}
                 onClick={() => scrollTo(id)}
@@ -100,7 +112,7 @@ export default function Header() {
               onClick={(e) => e.preventDefault()}
               className="ml-4 inline-flex items-center gap-2 bg-[#0B1D2E] text-white text-[13px] font-medium tracking-wide px-6 py-2.5 rounded-full hover:bg-[#1A3A5C] transition-colors duration-200"
             >
-              {t.nav.appointment}
+              {navAppointment}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
@@ -114,7 +126,7 @@ export default function Header() {
               onClick={(e) => e.preventDefault()}
               className="inline-flex items-center bg-[#0B1D2E] text-white text-[12px] font-medium px-4 py-2 rounded-full"
             >
-              {t.nav.appointment}
+              {navAppointment}
             </a>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -135,13 +147,7 @@ export default function Header() {
         }`}
       >
         <nav className="flex flex-col items-start px-8 pt-12 gap-8">
-          {[
-            { label: t.nav.specialists, id: 'specialists' },
-            { label: t.nav.expertise, id: 'expertise' },
-            { label: t.nav.faq, id: 'faq' },
-            { label: 'Info', id: 'practical-info' },
-            { label: t.nav.contact, id: 'contact' },
-          ].map(({ label, id }) => (
+          {navItems.map(({ label, id }) => (
             <button
               key={id}
               onClick={() => scrollTo(id)}

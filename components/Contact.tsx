@@ -3,11 +3,30 @@
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useScrollGate } from '@/hooks/useScrollGate';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { localize } from '@/sanity/lib/localize';
+import { SiteSettings } from '@/sanity/lib/queries';
 
-export default function Contact() {
-  const { t } = useLanguage();
+export default function Contact({ settings }: { settings: SiteSettings | null }) {
+  const { t, language } = useLanguage();
   const phoneRevealed = useScrollGate('faq');
   const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.05 });
+
+  const s = settings || {};
+  const contactLabel = localize(s, 'contactLabel', language, t.contact.label);
+  const contactTitle = localize(s, 'contactTitle', language, t.contact.title);
+  const address = s.address || t.contact.addressValue;
+  const phone = s.phone || t.contact.phoneValue;
+  const phoneHidden = localize(s, 'phoneHidden', language, t.contact.phoneHidden);
+  const hoursLabel = localize(s, 'hoursLabel', language, t.contact.hours);
+  const routeLabel = localize(s, 'contactRouteLabel', language, t.contact.route);
+  const callLabel = localize(s, 'contactCallLabel', language, t.contact.call);
+
+  const hoursData = s.hours && s.hours.length > 0
+    ? s.hours.map(h => ({
+        day: (h[`day_${language}` as keyof typeof h] as string) || h.day_nl || '',
+        time: h.time || '',
+      }))
+    : t.contact.hoursData;
 
   const mapsEmbedUrl =
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2523.5!2d4.5346!3d50.7742!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c3d9b0b0b0b0b0%3A0x0!2sBelgielaan%2023a%2C%203090%20Overijse!5e0!3m2!1snl!2sbe!4v1';
@@ -24,10 +43,10 @@ export default function Contact() {
           }`}
         >
           <span className="inline-block text-[12px] tracking-[0.25em] uppercase font-medium text-[#0B1D2E]/40 mb-4">
-            {t.contact.label}
+            {contactLabel}
           </span>
           <h2 className="font-serif text-[clamp(2rem,4vw,3rem)] font-semibold text-[#0B1D2E]">
-            {t.contact.title}
+            {contactTitle}
           </h2>
         </div>
 
@@ -50,7 +69,7 @@ export default function Contact() {
                 <p className="text-[13px] font-medium text-[#0B1D2E]/40 uppercase tracking-wide mb-1">
                   {t.contact.address}
                 </p>
-                <p className="text-[15px] text-[#1A1A1A]">{t.contact.addressValue}</p>
+                <p className="text-[15px] text-[#1A1A1A]">{address}</p>
               </div>
             </div>
 
@@ -67,14 +86,14 @@ export default function Contact() {
                 </p>
                 {phoneRevealed ? (
                   <a
-                    href={`tel:${t.contact.phoneValue.replace(/\//g, '')}`}
+                    href={`tel:${phone.replace(/\//g, '')}`}
                     className="text-[15px] text-[#0B1D2E] font-medium hover:text-[#1A3A5C] transition-colors"
                   >
-                    {t.contact.phoneValue}
+                    {phone}
                   </a>
                 ) : (
                   <p className="text-[14px] text-[#6B7280] italic">
-                    {t.contact.phoneHidden}
+                    {phoneHidden}
                   </p>
                 )}
               </div>
@@ -90,10 +109,10 @@ export default function Contact() {
               </div>
               <div>
                 <p className="text-[13px] font-medium text-[#0B1D2E]/40 uppercase tracking-wide mb-2">
-                  {t.contact.hours}
+                  {hoursLabel}
                 </p>
                 <div className="space-y-1.5">
-                  {t.contact.hoursData.map((row) => (
+                  {hoursData.map((row) => (
                     <div key={row.day} className="flex justify-between gap-8 text-[14px]">
                       <span className="text-[#1A1A1A] font-medium min-w-[100px]">{row.day}</span>
                       <span className="text-[#6B7280]">{row.time}</span>
@@ -107,13 +126,13 @@ export default function Contact() {
             <div className="flex flex-wrap gap-3 pt-4">
               {phoneRevealed && (
                 <a
-                  href={`tel:${t.contact.phoneValue.replace(/\//g, '')}`}
+                  href={`tel:${phone.replace(/\//g, '')}`}
                   className="inline-flex items-center gap-2 bg-[#0B1D2E] text-white text-[13px] font-medium px-6 py-3 rounded-full hover:bg-[#1A3A5C] transition-colors duration-200"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                   </svg>
-                  {t.contact.call}
+                  {callLabel}
                 </a>
               )}
               <a
@@ -125,7 +144,7 @@ export default function Contact() {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polygon points="3 11 22 2 13 21 11 13 3 11"/>
                 </svg>
-                {t.contact.route}
+                {routeLabel}
               </a>
             </div>
           </div>

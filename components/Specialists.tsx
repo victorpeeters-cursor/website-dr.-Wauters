@@ -2,29 +2,24 @@
 
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { localize } from '@/sanity/lib/localize';
+import { Doctor, PageContent } from '@/sanity/lib/queries';
 import Image from 'next/image';
 
-export default function Specialists() {
-  const { t } = useLanguage();
+export default function Specialists({ doctors, content }: { doctors: Doctor[]; content: PageContent | null }) {
+  const { t, language } = useLanguage();
   const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
 
-  const team = [
-    {
-      name: t.specialists.isabelle.name,
-      role: t.specialists.isabelle.role,
-      image: '/images/isabelle.jpg',
-    },
-    {
-      name: t.specialists.eva.name,
-      role: t.specialists.eva.role,
-      image: '/images/eva.jpg',
-    },
-    {
-      name: t.specialists.catherine.name,
-      role: t.specialists.catherine.role,
-      image: '/images/catherine.jpg',
-    },
-  ];
+  const c = content || {};
+  const label = localize(c, 'specialistsLabel', language, t.specialists.label);
+  const title = localize(c, 'specialistsTitle', language, t.specialists.title);
+  const description = localize(c, 'specialistsDescription', language, t.specialists.description);
+
+  const team = (doctors || []).map(doc => ({
+    name: doc.name,
+    role: doc[`role_${language}` as keyof Doctor] || doc.role_nl,
+    image: doc.imageUrl || '/images/placeholder.jpg',
+  }));
 
   return (
     <section id="specialists" ref={sectionRef} className="py-24 lg:py-32 bg-white">
@@ -37,10 +32,10 @@ export default function Specialists() {
             }`}
           >
             <span className="inline-block text-[12px] tracking-[0.25em] uppercase font-medium text-[#0B1D2E]/40 mb-4">
-              {t.specialists.label}
+              {label}
             </span>
             <h2 className="font-serif text-[clamp(2rem,4vw,3.5rem)] leading-[1.1] font-semibold text-[#0B1D2E] whitespace-pre-line">
-              {t.specialists.title}
+              {title}
             </h2>
           </div>
           <p
@@ -48,7 +43,7 @@ export default function Specialists() {
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
-            {t.specialists.description}
+            {description}
           </p>
         </div>
 

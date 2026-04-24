@@ -3,11 +3,21 @@
 import { useState } from 'react';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { localize } from '@/sanity/lib/localize';
+import { FaqItem, PageContent } from '@/sanity/lib/queries';
 
-export default function FAQ() {
-  const { t } = useLanguage();
+export default function FAQ({ items, content }: { items: FaqItem[]; content: PageContent | null }) {
+  const { t, language } = useLanguage();
   const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.05 });
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const c = content || {};
+  const faqTitle = localize(c, 'faqTitle', language, t.faq.title);
+
+  const faqs = (items || []).map(item => ({
+    question: item[`question_${language}` as keyof FaqItem] as string || item.question_nl,
+    answer: item[`answer_${language}` as keyof FaqItem] as string || item.answer_nl,
+  }));
 
   return (
     <section id="faq" ref={sectionRef} className="py-24 lg:py-32 bg-white">
@@ -19,13 +29,13 @@ export default function FAQ() {
           }`}
         >
           <h2 className="font-serif text-[clamp(2rem,4vw,3rem)] font-semibold text-[#0B1D2E]">
-            {t.faq.title}
+            {faqTitle}
           </h2>
         </div>
 
         {/* Accordion */}
         <div className="space-y-0">
-          {t.faq.items.map((item, index) => {
+          {faqs.map((item, index) => {
             const isOpen = openIndex === index;
             return (
               <div
