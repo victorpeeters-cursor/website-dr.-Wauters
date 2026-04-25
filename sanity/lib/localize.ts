@@ -5,7 +5,8 @@ import type { Language } from '@/lib/i18n/translations'
  * Valt terug op NL als de vertaling ontbreekt, daarna op de fallback string.
  */
 export function localize(
-  obj: Record<string, unknown> | null | undefined,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  obj: any,
   fieldPrefix: string,
   language: Language,
   fallback: string = ''

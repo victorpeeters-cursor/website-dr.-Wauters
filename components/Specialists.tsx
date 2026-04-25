@@ -11,9 +11,10 @@ export default function Specialists({ doctors, content }: { doctors: Doctor[]; c
   const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
 
   const c = content || {};
-  const label = localize(c, 'specialistsLabel', language, t.specialists.label);
-  const title = localize(c, 'specialistsTitle', language, t.specialists.title);
-  const description = localize(c, 'specialistsDescription', language, t.specialists.description);
+  const cl = c as Record<string, unknown>;
+  const label = localize(cl, 'specialistsLabel', language, t.specialists.label);
+  const title = localize(cl, 'specialistsTitle', language, t.specialists.title);
+  const description = localize(cl, 'specialistsDescription', language, t.specialists.description);
 
   const fallbackTeam = [
     { name: t.specialists.isabelle.name, role: t.specialists.isabelle.role, image: '/images/placeholder.jpg' },

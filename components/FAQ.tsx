@@ -12,7 +12,8 @@ export default function FAQ({ items, content }: { items: FaqItem[]; content: Pag
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const c = content || {};
-  const faqTitle = localize(c, 'faqTitle', language, t.faq.title);
+  const cl = c as Record<string, unknown>;
+  const faqTitle = localize(cl, 'faqTitle', language, t.faq.title);
 
   const faqs = items && items.length > 0
     ? items.map(item => ({

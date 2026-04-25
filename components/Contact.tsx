@@ -12,14 +12,15 @@ export default function Contact({ settings }: { settings: SiteSettings | null })
   const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.05 });
 
   const s = settings || {};
-  const contactLabel = localize(s, 'contactLabel', language, t.contact.label);
-  const contactTitle = localize(s, 'contactTitle', language, t.contact.title);
+  const sl = s as Record<string, unknown>;
+  const contactLabel = localize(sl, 'contactLabel', language, t.contact.label);
+  const contactTitle = localize(sl, 'contactTitle', language, t.contact.title);
   const address = s.address || t.contact.addressValue;
   const phone = s.phone || t.contact.phoneValue;
-  const phoneHidden = localize(s, 'phoneHidden', language, t.contact.phoneHidden);
-  const hoursLabel = localize(s, 'hoursLabel', language, t.contact.hours);
-  const routeLabel = localize(s, 'contactRouteLabel', language, t.contact.route);
-  const callLabel = localize(s, 'contactCallLabel', language, t.contact.call);
+  const phoneHidden = localize(sl, 'phoneHidden', language, t.contact.phoneHidden);
+  const hoursLabel = localize(sl, 'hoursLabel', language, t.contact.hours);
+  const routeLabel = localize(sl, 'contactRouteLabel', language, t.contact.route);
+  const callLabel = localize(sl, 'contactCallLabel', language, t.contact.call);
 
   const hoursData = s.hours && s.hours.length > 0
     ? s.hours.map(h => ({

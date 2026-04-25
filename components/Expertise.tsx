@@ -21,9 +21,10 @@ export default function Expertise({ items, content }: { items: ExpertiseItem[]; 
   const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.05 });
 
   const c = content || {};
-  const label = localize(c, 'expertiseLabel', language, t.expertise.label);
-  const title = localize(c, 'expertiseTitle', language, t.expertise.title);
-  const description = localize(c, 'expertiseDescription', language, t.expertise.description);
+  const cl = c as Record<string, unknown>;
+  const label = localize(cl, 'expertiseLabel', language, t.expertise.label);
+  const title = localize(cl, 'expertiseTitle', language, t.expertise.title);
+  const description = localize(cl, 'expertiseDescription', language, t.expertise.description);
 
   const fallbackExpertises = Object.entries(t.expertise.items).map(([key, val]) => ({
     icon: iconMap[key] || <LungsIcon />,

@@ -18,8 +18,9 @@ export default function PracticalInfo({ items, content }: { items: PracticalInfo
   const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.05 });
 
   const c = content || {};
-  const label = localize(c, 'practicalInfoLabel', language, t.practicalInfo.label);
-  const title = localize(c, 'practicalInfoTitle', language, t.practicalInfo.title);
+  const cl = c as Record<string, unknown>;
+  const label = localize(cl, 'practicalInfoLabel', language, t.practicalInfo.label);
+  const title = localize(cl, 'practicalInfoTitle', language, t.practicalInfo.title);
 
   const fallbackCards = Object.entries(t.practicalInfo.items).map(([key, val]) => ({
     icon: iconMap[key] || <ResultsIcon />,
