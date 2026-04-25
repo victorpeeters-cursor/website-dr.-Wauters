@@ -7,6 +7,7 @@ import PracticalInfo from "@/components/PracticalInfo";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import StickyBanner from "@/components/StickyBanner";
+import FloatingCTA from "@/components/FloatingCTA";
 import { client } from "@/sanity/lib/client";
 import {
   doctorsQuery,
@@ -45,6 +46,7 @@ export default async function Home() {
         <Contact settings={siteSettings} />
       </main>
       <Footer settings={siteSettings} />
+      <FloatingCTA settings={siteSettings} />
     </>
   );
 }

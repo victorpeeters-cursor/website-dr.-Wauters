@@ -21,11 +21,19 @@ export default function PracticalInfo({ items, content }: { items: PracticalInfo
   const label = localize(c, 'practicalInfoLabel', language, t.practicalInfo.label);
   const title = localize(c, 'practicalInfoTitle', language, t.practicalInfo.title);
 
-  const cards = (items || []).map(item => ({
-    icon: iconMap[item.iconKey] || <ResultsIcon />,
-    title: (item[`title_${language}` as keyof PracticalInfoItem] as string) || item.title_nl,
-    description: (item[`description_${language}` as keyof PracticalInfoItem] as string) || item.description_nl,
+  const fallbackCards = Object.entries(t.practicalInfo.items).map(([key, val]) => ({
+    icon: iconMap[key] || <ResultsIcon />,
+    title: val.title,
+    description: val.description,
   }));
+
+  const cards = items && items.length > 0
+    ? items.map(item => ({
+        icon: iconMap[item.iconKey] || <ResultsIcon />,
+        title: (item[`title_${language}` as keyof PracticalInfoItem] as string) || item.title_nl,
+        description: (item[`description_${language}` as keyof PracticalInfoItem] as string) || item.description_nl,
+      }))
+    : fallbackCards;
 
   return (
     <section id="practical-info" ref={sectionRef} className="py-24 lg:py-32 bg-[#F7F5F2]">

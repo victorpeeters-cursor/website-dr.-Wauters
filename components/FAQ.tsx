@@ -14,10 +14,12 @@ export default function FAQ({ items, content }: { items: FaqItem[]; content: Pag
   const c = content || {};
   const faqTitle = localize(c, 'faqTitle', language, t.faq.title);
 
-  const faqs = (items || []).map(item => ({
-    question: item[`question_${language}` as keyof FaqItem] as string || item.question_nl,
-    answer: item[`answer_${language}` as keyof FaqItem] as string || item.answer_nl,
-  }));
+  const faqs = items && items.length > 0
+    ? items.map(item => ({
+        question: (item[`question_${language}` as keyof FaqItem] as string) || item.question_nl,
+        answer: (item[`answer_${language}` as keyof FaqItem] as string) || item.answer_nl,
+      }))
+    : t.faq.items;
 
   return (
     <section id="faq" ref={sectionRef} className="py-24 lg:py-32 bg-white">

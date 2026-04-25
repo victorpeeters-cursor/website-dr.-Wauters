@@ -48,7 +48,7 @@ export default function Hero({ content }: { content: PageContent | null }) {
         <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-white/40" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-[1400px] px-6 lg:px-12 w-full pt-32 pb-20 lg:pt-40 lg:pb-32">
+      <div className="relative z-10 mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-12 w-full pt-24 pb-16 lg:pt-40 lg:pb-32">
         <div className="max-w-2xl">
           {/* Subtitle */}
           <div
@@ -83,14 +83,14 @@ export default function Hero({ content }: { content: PageContent | null }) {
 
           {/* CTAs */}
           <div
-            className={`flex flex-wrap items-center gap-4 mb-16 transition-all duration-700 delay-300 ${
+            className={`flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 mb-12 lg:mb-16 transition-all duration-700 delay-300 ${
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}
           >
             <a
               href="#"
               onClick={(e) => e.preventDefault()}
-              className="inline-flex items-center gap-2 bg-[#0B1D2E] text-white text-[14px] font-medium tracking-wide px-8 py-3.5 rounded-full hover:bg-[#1A3A5C] transition-colors duration-200"
+              className="inline-flex items-center justify-center gap-2 bg-[#0B1D2E] text-white text-[14px] font-medium tracking-wide px-8 py-3.5 rounded-full hover:bg-[#1A3A5C] transition-colors duration-200 w-full sm:w-auto"
             >
               {cta}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -99,7 +99,7 @@ export default function Hero({ content }: { content: PageContent | null }) {
             </a>
             <button
               onClick={() => scrollTo('expertise')}
-              className="inline-flex items-center gap-2 text-[14px] font-medium tracking-wide text-[#0B1D2E] px-6 py-3.5 rounded-full border border-[#E5E7EB] hover:border-[#0B1D2E]/30 transition-colors duration-200"
+              className="inline-flex items-center justify-center gap-2 text-[14px] font-medium tracking-wide text-[#0B1D2E] px-6 py-3.5 rounded-full border border-[#E5E7EB] hover:border-[#0B1D2E]/30 transition-colors duration-200 w-full sm:w-auto"
             >
               {ctaSecondary}
             </button>

@@ -25,11 +25,19 @@ export default function Expertise({ items, content }: { items: ExpertiseItem[]; 
   const title = localize(c, 'expertiseTitle', language, t.expertise.title);
   const description = localize(c, 'expertiseDescription', language, t.expertise.description);
 
-  const expertises = (items || []).map(item => ({
-    icon: iconMap[item.iconKey] || <LungsIcon />,
-    title: (item[`title_${language}` as keyof ExpertiseItem] as string) || item.title_nl,
-    description: (item[`description_${language}` as keyof ExpertiseItem] as string) || item.description_nl,
+  const fallbackExpertises = Object.entries(t.expertise.items).map(([key, val]) => ({
+    icon: iconMap[key] || <LungsIcon />,
+    title: val.title,
+    description: val.description,
   }));
+
+  const expertises = items && items.length > 0
+    ? items.map(item => ({
+        icon: iconMap[item.iconKey] || <LungsIcon />,
+        title: (item[`title_${language}` as keyof ExpertiseItem] as string) || item.title_nl,
+        description: (item[`description_${language}` as keyof ExpertiseItem] as string) || item.description_nl,
+      }))
+    : fallbackExpertises;
 
   return (
     <section id="expertise" ref={sectionRef} className="py-24 lg:py-32 bg-[#F7F5F2]">

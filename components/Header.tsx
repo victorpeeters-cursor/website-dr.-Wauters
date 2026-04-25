@@ -62,17 +62,17 @@ export default function Header({ settings }: { settings: SiteSettings | null }) 
           : 'bg-transparent'
       }`}
     >
-      <div className="mx-auto max-w-[1400px] px-6 lg:px-12">
-        <div className="flex h-20 items-center justify-between">
-          {/* Logo */}
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-12">
+        <div className="flex h-16 lg:h-20 items-center justify-between">
+          {/* Logo — smaller on mobile */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="flex flex-col leading-tight"
           >
-            <span className="font-serif text-lg font-semibold tracking-tight text-[#0B1D2E]">
-              Wauters & Vandoorne
+            <span className="font-serif text-base lg:text-lg font-semibold tracking-tight text-[#0B1D2E]">
+              Wauters &amp; Vandoorne
             </span>
-            <span className="text-[10px] tracking-[0.15em] uppercase text-[#6B7280] w-full text-left">
+            <span className="text-[9px] lg:text-[10px] tracking-[0.15em] uppercase text-[#6B7280] w-full text-left">
               {logoSubtitle}
             </span>
           </button>
@@ -119,18 +119,27 @@ export default function Header({ settings }: { settings: SiteSettings | null }) 
             </a>
           </nav>
 
-          {/* Mobile: CTA + Hamburger */}
-          <div className="flex items-center gap-3 lg:hidden">
-            <a
-              href="#"
-              onClick={(e) => e.preventDefault()}
-              className="inline-flex items-center bg-[#0B1D2E] text-white text-[12px] font-medium px-4 py-2 rounded-full"
-            >
-              {navAppointment}
-            </a>
+          {/* Mobile: Language switcher + Hamburger (CTA moved to FloatingCTA) */}
+          <div className="flex items-center gap-2 lg:hidden">
+            {/* Compact language switcher */}
+            <div className="flex items-center gap-0.5">
+              {languages.map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => setLanguage(lang)}
+                  className={`min-w-[36px] min-h-[36px] flex items-center justify-center text-[11px] font-medium tracking-wider uppercase rounded-md transition-all duration-200 ${
+                    language === lang
+                      ? 'bg-[#0B1D2E] text-white'
+                      : 'text-[#6B7280]'
+                  }`}
+                >
+                  {lang}
+                </button>
+              ))}
+            </div>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="flex flex-col justify-center items-center w-10 h-10 gap-1.5"
+              className="flex flex-col justify-center items-center w-11 h-11 gap-1.5"
               aria-label="Menu"
             >
               <span className={`block h-[1.5px] w-5 bg-[#0B1D2E] transition-all duration-300 ${mobileOpen ? 'rotate-45 translate-y-[4px]' : ''}`} />
@@ -142,20 +151,36 @@ export default function Header({ settings }: { settings: SiteSettings | null }) 
 
       {/* Mobile Menu */}
       <div
-        className={`lg:hidden fixed inset-0 top-20 bg-white z-40 transition-transform duration-300 ease-in-out ${
+        className={`lg:hidden fixed inset-0 top-16 bg-white z-40 transition-transform duration-300 ease-in-out ${
           mobileOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <nav className="flex flex-col items-start px-8 pt-12 gap-8">
+        <nav className="flex flex-col items-start px-8 pt-10 gap-7 h-full">
           {navItems.map(({ label, id }) => (
             <button
               key={id}
               onClick={() => scrollTo(id)}
-              className="text-2xl font-serif text-[#0B1D2E]"
+              className="text-2xl font-serif text-[#0B1D2E] min-h-[44px] flex items-center"
             >
               {label}
             </button>
           ))}
+
+          {/* CTA in mobile menu */}
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              setMobileOpen(false);
+            }}
+            className="w-full inline-flex items-center justify-center gap-2 bg-[#0B1D2E] text-white text-[15px] font-medium tracking-wide px-6 py-4 rounded-full hover:bg-[#1A3A5C] transition-colors duration-200 mt-2"
+          >
+            {navAppointment}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+
           <div className="flex items-center gap-2 pt-4 border-t border-[#E5E7EB] w-full">
             {languages.map((lang) => (
               <button
@@ -164,10 +189,10 @@ export default function Header({ settings }: { settings: SiteSettings | null }) 
                   setLanguage(lang);
                   setMobileOpen(false);
                 }}
-                className={`px-3 py-1.5 text-sm font-medium tracking-wider uppercase rounded transition-all duration-200 ${
+                className={`min-w-[44px] min-h-[44px] flex items-center justify-center text-sm font-medium tracking-wider uppercase rounded transition-all duration-200 ${
                   language === lang
                     ? 'bg-[#0B1D2E] text-white'
-                    : 'text-[#6B7280] hover:text-[#0B1D2E]  border border-[#E5E7EB]'
+                    : 'text-[#6B7280] hover:text-[#0B1D2E] border border-[#E5E7EB]'
                 }`}
               >
                 {lang}

@@ -35,7 +35,7 @@ export default function StickyBanner({ enabled = false, settings }: StickyBanner
 
   return (
     <div className="bg-[#0B1D2E] text-white text-center py-2.5 px-6 relative z-[60]">
-      <p className="text-[13px] tracking-wide">
+      <p className="text-[13px] tracking-wide pr-8 sm:pr-0">
         {message}
       </p>
       <button

@@ -15,11 +15,19 @@ export default function Specialists({ doctors, content }: { doctors: Doctor[]; c
   const title = localize(c, 'specialistsTitle', language, t.specialists.title);
   const description = localize(c, 'specialistsDescription', language, t.specialists.description);
 
-  const team = (doctors || []).map(doc => ({
-    name: doc.name,
-    role: doc[`role_${language}` as keyof Doctor] || doc.role_nl,
-    image: doc.imageUrl || '/images/placeholder.jpg',
-  }));
+  const fallbackTeam = [
+    { name: t.specialists.isabelle.name, role: t.specialists.isabelle.role, image: '/images/placeholder.jpg' },
+    { name: t.specialists.eva.name, role: t.specialists.eva.role, image: '/images/placeholder.jpg' },
+    { name: t.specialists.catherine.name, role: t.specialists.catherine.role, image: '/images/placeholder.jpg' },
+  ];
+
+  const team = doctors && doctors.length > 0
+    ? doctors.map(doc => ({
+        name: doc.name,
+        role: (doc[`role_${language}` as keyof Doctor] as string) || doc.role_nl,
+        image: doc.imageUrl || '/images/placeholder.jpg',
+      }))
+    : fallbackTeam;
 
   return (
     <section id="specialists" ref={sectionRef} className="py-24 lg:py-32 bg-white">
@@ -57,7 +65,7 @@ export default function Specialists({ doctors, content }: { doctors: Doctor[]; c
               }`}
               style={{ transitionDelay: isVisible ? `${200 + index * 100}ms` : '0ms' }}
             >
-              <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-[#F7F5F2] mb-5">
+              <div className="relative aspect-[4/3] md:aspect-[3/4] overflow-hidden rounded-lg bg-[#F7F5F2] mb-5">
                 <Image
                   src={member.image}
                   alt={member.name}
